@@ -11,7 +11,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         //Expecting library service to listen on port 3001
         name: 'LIBRARY',
         transport: Transport.TCP,
-        options: {  host: 'localhost', port: 3001 },
+        options: {
+          // Use the Docker service name instead of localhost
+          host: 'library-service',
+          port: 3001,
+        },
       },
     ]),
   ],
