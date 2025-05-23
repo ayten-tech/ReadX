@@ -6,30 +6,26 @@ FROM node:18-alpine
 #Why it's used: Organizes your code inside the container.
 WORKDIR /usr/src/app
 
-# Copy package files
-# Copies only package.json and package-lock.json first.
-
+# Copy package files (package.json and package-lock.json) first.
 COPY package*.json ./
 
-# Install dependencies
-# Installs only production dependencies.
+# Install dependencies (including dev dependencies for TypeScript and migration tools (ts-node, TypeORM))
 RUN npm install
 
-# Copy source code
-#What it does: Copies all your source code to the container.
-#Why it's used: Brings in your NestJS app files.
+# Copy source code (brings in your NestJS app files)
 COPY . .
 
-# Build the application
-# This compiles TypeScript to JavaScript
+# Build the application (compiles TypeScript to JavaScript)
 RUN npm run build
 
-# Expose the port the app runs on
-#What it does: Informs Docker that the app listens on port 3001.
-# Why it's used: Helps with container networking and port mapping.
+# Install ts-node (and tsconfig-paths) globally so that the migration CLI can run .ts files (migration files are ts)
+RUN npm install -g ts-node tsconfig-paths
+
+# # Run the migration (using npm run typeorm:migration:run) so that the migration file (ts) is executed inside the container
+# RUN npm run typeorm:migration:run
+
+# Expose the port the app runs on (informs Docker that the app listens on port 3001)
 EXPOSE 3001
 
-# Command to run the application
-# What it does: Starts the built NestJS app (main.js) in production mode.
-# Why it's used: Defines the default command when the container starts.
+# Command to run the application (starts the built NestJS app (main.js) in production mode)
 CMD ["npm", "run", "start:prod"] 

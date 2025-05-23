@@ -10,6 +10,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - LIBRARY_SERVICE_HOST=library-service
+      - LIBRARY_SERVICE_PORT=3001
     depends_on:
       - library-service
     networks:
@@ -23,9 +25,44 @@ services:
       - "3001:3001"
     environment:
       - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_DATABASE=library_db
+    depends_on:
+      - postgres
+    networks:
+      - readx-network
+
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=library_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - readx-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    depends_on:
+      - postgres
     networks:
       - readx-network
 
 networks:
   readx-network:
-    driver: bridge 
+    driver: bridge
+
+volumes:
+  postgres_data: 
