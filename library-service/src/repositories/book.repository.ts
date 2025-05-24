@@ -29,4 +29,31 @@ export class BookRepository {
     const book = this.repository.create(data);
     return this.repository.save(book);
   }
+
+  //when you search for book by name -> returns the book data and only author name instead of the whole author data (relation)
+  async search(criteria: { title: string }): Promise<Book[]> {
+    return this.repository
+      .createQueryBuilder('book')
+      .leftJoinAndSelect('book.author', 'author')
+      .select([
+        'book.id',
+        'book.title',
+        'book.genre',
+        'book.dateOfEstablished',
+        'author.name'
+      ])
+      .where('book.title ILIKE :title', { title: `%${criteria.title}%` })
+      .orderBy('book.dateOfEstablished', 'DESC')
+      .getMany();
+  }
+
+  async findByGenre(genre: string): Promise<Book[]> {
+    return this.repository.find({
+      where: { genre: Like(`%${genre}%`) },
+      relations: ['author'],
+      order: {
+        dateOfEstablished: 'DESC'
+      }
+    });
+  }
 } 

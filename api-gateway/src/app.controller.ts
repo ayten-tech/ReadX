@@ -67,4 +67,21 @@ export class AppController {
     return this.appService.getAuthorBooks(id);
   }
 
+  //search books by title(name)
+  @Get('/books/search')
+  async searchBooks(
+    @Query('title') title: string,
+  ): Promise<Book[]> {
+    if (!title) {
+      throw new BadRequestException('Title parameter is required for search');
+    }
+    return this.appService.searchBooks({ title });
+  }
+
+  //get all books of a specific genre
+  @Get('/books/genre/:genre')
+  async getBooksByGenre(@Param('genre') genre: string): Promise<Book[]> {
+    return this.appService.getBooksByGenre(genre);
+  }
+
 }

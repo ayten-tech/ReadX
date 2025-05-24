@@ -43,4 +43,12 @@ export class AppService {
   async getAuthorBooks(id: number): Promise<Book[]> {
     return firstValueFrom(this.libraryClient.send({ cmd: 'get_author_books' }, id));
   }
+
+  async searchBooks(criteria: { title: string }): Promise<Book[]> {
+    return firstValueFrom(this.libraryClient.send({ cmd: 'search_books' }, criteria));
+  }
+
+  async getBooksByGenre(genre: string): Promise<Book[]> {
+    return firstValueFrom(this.libraryClient.send({ cmd: 'get_books_by_genre' }, genre));
+  }
 }

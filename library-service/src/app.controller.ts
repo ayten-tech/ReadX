@@ -50,6 +50,16 @@ export class AppController {
     return this.appService.getAuthorBooks(authorId);
   }
 
+  @MessagePattern({ cmd: 'search_books' })
+  async searchBooks(criteria: { title: string }) {
+    return this.appService.searchBooks(criteria);
+  }
+
+  @MessagePattern({ cmd: 'get_books_by_genre' })
+  async getBooksByGenre(genre: string) {
+    return this.appService.getBooksByGenre(genre);
+  }
+
   @MessagePattern({ cmd: 'get_all_authors' })
   async getAllAuthors() {
     return this.appService.getAllAuthors();

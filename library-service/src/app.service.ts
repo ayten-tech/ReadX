@@ -106,4 +106,14 @@ export class AppService {
   async getAuthorBooks(authorId: number) {
     return this.authorRepository.getAuthorBooks(authorId);
   }
+
+  @MessagePattern({ cmd: 'search_books' })
+  async searchBooks(criteria: { title: string }) {
+    return this.bookRepository.search(criteria);
+  }
+
+  @MessagePattern({ cmd: 'get_books_by_genre' })
+  async getBooksByGenre(genre: string) {
+    return this.bookRepository.findByGenre(genre);
+  }
 }
