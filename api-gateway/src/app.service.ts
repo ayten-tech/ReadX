@@ -21,5 +21,26 @@ export class AppService {
     return firstValueFrom(this.libraryClient.send({ cmd: 'get_all_authors' }, {}));
   }
 
- 
+  async createAuthor(data: { 
+    name: string; 
+    biography?: string;
+    books: {
+      title: string;
+      genre: string;
+    }[];
+  }): Promise<Author> {
+    return firstValueFrom(this.libraryClient.send({ cmd: 'create_author' }, data));
+  }
+
+  async getAuthorById(id: number): Promise<Author> {
+    return firstValueFrom(this.libraryClient.send({ cmd: 'get_author_by_id' }, id));
+  }
+
+  async getAuthorByName(name: string): Promise<Author | null> {
+    return firstValueFrom(this.libraryClient.send({ cmd: 'get_author_by_name' }, name));
+  }
+
+  async getAuthorBooks(id: number): Promise<Book[]> {
+    return firstValueFrom(this.libraryClient.send({ cmd: 'get_author_books' }, id));
+  }
 }

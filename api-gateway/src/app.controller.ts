@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query, Body } from '@nestjs/common';
+import { Controller, Get, Post, Query, Body, Param, BadRequestException } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Book, Author } from './types/book.interface';
 
@@ -31,6 +31,40 @@ export class AppController {
   @Get('/authors')
   async getAuthors(): Promise<Author[]> {
     return this.appService.getAuthors();
+  }
+
+  @Post('/author')
+  async createAuthor(
+    @Body() data: { 
+      name: string; 
+      biography?: string;
+      books: {
+        title: string;
+        genre: string;
+      }[];
+    },
+  ): Promise<Author> {
+    if (!data.books || data.books.length === 0) {
+      throw new BadRequestException('At least one book is required when creating an author');
+    }
+    return this.appService.createAuthor(data);
+  }
+
+  //get author info (description & books)
+  @Get('/author/:id')
+  async getAuthorById(@Param('id') id: number): Promise<Author> {
+    return this.appService.getAuthorById(id);
+  }
+
+  // @Get('/authors/name/:name')
+  // async getAuthorByName(@Param('name') name: string): Promise<Author | null> {
+  //   return this.appService.getAuthorByName(name);
+  // }
+
+  //get all books of author no author info just books
+  @Get('/author/:id/books')
+  async getAuthorBooks(@Param('id') id: number): Promise<Book[]> {
+    return this.appService.getAuthorBooks(id);
   }
 
 }
