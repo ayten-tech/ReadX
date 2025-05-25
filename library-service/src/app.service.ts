@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { Book } from './entities/book.entity';
 import { Author } from './entities/author.entity';
@@ -6,9 +6,12 @@ import { User } from './entities/user.entity';
 import { BookRepository } from './repositories/book.repository';
 import { AuthorRepository } from './repositories/author.repository';
 import { UserRepository } from './repositories/user.repository';
+import { CreateUserDto } from './dto/create-user.dto';
 //we implement required endpoints here using functions from repositories
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger(AppService.name);
+
   constructor(
     private readonly bookRepository: BookRepository,
     private readonly authorRepository: AuthorRepository,
@@ -115,5 +118,32 @@ export class AppService {
   @MessagePattern({ cmd: 'get_books_by_genre' })
   async getBooksByGenre(genre: string) {
     return this.bookRepository.findByGenre(genre);
+  }
+
+  @MessagePattern({ cmd: 'find_user_by_username' })
+  async findUserByUsername(username: string) {
+    return this.userRepository.findByUsername(username);
+  }
+
+  @MessagePattern({ cmd: 'create_user' })
+  async createUser(data: CreateUserDto) {
+    return this.userRepository.create(data);
+  }
+
+  @MessagePattern({ cmd: 'wish_to_read' })
+  async wishToRead(userId: number, bookId: number) {
+    try {
+      if (!userId || !bookId) {
+        throw new InternalServerErrorException('userId and bookId are required');
+      }
+      return await this.userRepository.wishToRead(userId, bookId);
+    } catch (error) {
+      if (error.status) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        `Failed to process wish_to_read request: ${error.message}`
+      );
+    }
   }
 }

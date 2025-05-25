@@ -1,9 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Logger } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern } from '@nestjs/microservices';
+import { User } from './interfaces/user.interface';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller()
 export class AppController {
+  private readonly logger = new Logger(AppController.name);
+
   constructor(private readonly appService: AppService) {}
 
   @Get('health')
@@ -63,5 +67,20 @@ export class AppController {
   @MessagePattern({ cmd: 'get_all_authors' })
   async getAllAuthors() {
     return this.appService.getAllAuthors();
+  }
+
+  @MessagePattern({ cmd: 'find_user_by_username' })
+  async findUserByUsername(data: { username: string }) {
+    return this.appService.findUserByUsername(data.username);
+  }
+
+  @MessagePattern({ cmd: 'create_user' })
+  async createUser(data: CreateUserDto) {
+    return this.appService.createUser(data);
+  }
+
+  @MessagePattern({ cmd: 'wish_to_read' })
+  async wishToRead(data: { userId: number; bookId: number }) {
+    return this.appService.wishToRead(data.userId, data.bookId);
   }
 }

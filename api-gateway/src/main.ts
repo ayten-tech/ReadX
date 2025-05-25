@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // Add global prefix 'api' to all routes
   app.setGlobalPrefix('api');
+  app.useGlobalPipes(new ValidationPipe());
   //API Gateway Listens for HTTP requests (from client/browser) on port 3000
   //API Gateway ➝ Library	3001 Sends TCP messages to Library service
   //Library Service 3001 Listens for TCP messages from Gateway
