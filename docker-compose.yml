@@ -35,6 +35,24 @@ services:
     networks:
       - readx-network
 
+  tracker-service:
+    build:
+      context: ./tracker-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=tracker-postgres
+      - DB_PORT=5432
+      - DB_USERNAME=tracker_user
+      - DB_PASSWORD=tracker_password
+      - DB_DATABASE=tracker_db
+    depends_on:
+      - tracker-postgres
+    networks:
+      - readx-network
+
   postgres:
     image: postgres:15-alpine
     ports:
@@ -48,15 +66,16 @@ services:
     networks:
       - readx-network
 
-  pgadmin:
-    image: dpage/pgadmin4
+  tracker-postgres:
+    image: postgres:15-alpine
     ports:
-      - "5050:80"
+      - "5433:5432"
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
-    depends_on:
-      - postgres
+      - POSTGRES_USER=tracker_user
+      - POSTGRES_PASSWORD=tracker_password
+      - POSTGRES_DB=tracker_db
+    volumes:
+      - tracker_postgres_data:/var/lib/postgresql/data
     networks:
       - readx-network
 
@@ -65,4 +84,5 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data: 
+  postgres_data:
+  tracker_postgres_data: 
