@@ -1,5 +1,3 @@
-<img width="1440" alt="Screenshot 2025-05-27 at 11 35 08 PM" src="https://github.com/user-attachments/assets/65f7a254-d9c9-41c1-96dc-ea9d58eb9314" /># ReadX
-
 ReadX is a microservices-based reading tracking application built with NestJS. It helps users manage their reading lists, track their reading progress, and discover new books.
 
 ## Architecture
@@ -25,13 +23,12 @@ The application follows a microservices architecture with three main services:
 
 ## Features
 
-![Flow of Library Service]
 *Flow diagram showing the architecture and data flow of the Library Service*
 
 ![flow](https://github.com/user-attachments/assets/f87916fd-33b3-485e-a8c6-6ac81831503e)
 
 
-![Flow of tracker Service]
+
 *Same goes applies on tracker service*
 
 
@@ -160,6 +157,8 @@ All endpoints are prefixed with `/api` and are accessible through the API Gatewa
 ![Screenshot 2025-05-27 at 11 34 58 PM](https://github.com/user-attachments/assets/a8a2edcd-c479-43b9-97d6-8c426ddc7275)
 ![Screenshot 2025-05-27 at 11 35 02 PM](https://github.com/user-attachments/assets/dd9382a4-bbd4-4c29-b3ef-8c44c4fb9446)
 ![Screenshot 2025-05-27 at 11 35 05 PM](https://github.com/user-attachments/assets/bc933686-5531-4b23-8e76-5bde3dacba80)
+<img width="1440" alt="Screenshot 2025-05-27 at 11 35 08 PM" src="https://github.com/user-attachments/assets/65f7a254-d9c9-41c1-96dc-ea9d58eb9314" /># ReadX
+
 
 ## Docker Support
 
